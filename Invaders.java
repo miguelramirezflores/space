@@ -1,4 +1,4 @@
-package tutorialJava.capitulo6b_Videojuegos.SpaceInvaders.version01_La_ventana;
+package tutorialJava.capitulo6b_Videojuegos.SpaceInvaders.version02_Eventos_en_la_ventana;
 
 import java.awt.BorderLayout;
 import java.awt.Canvas;
@@ -41,6 +41,7 @@ public class Invaders extends Canvas {
 	private static Invaders instance = null;
 	
 	
+	
 	/**
 	 * Constructor: crea la ventana, obtiene una referencia al panel principal, introduce el Canvas en su interior
 	 * y habilita y deshabilita varios comportamientos de la ventana
@@ -56,6 +57,19 @@ public class Invaders extends Canvas {
 		ventana.setBounds(0,0, JFRAME_WIDTH, JFRAME_HEIGHT);
 		// Muestro la ventana en pantalla
 		ventana.setVisible(true);
+		// Desactivo el comportamiento por defecto al pulsar el botón de cierre de la ventana
+		ventana.setDefaultCloseOperation(JFrame.DO_NOTHING_ON_CLOSE);
+		// Agrego un escuchador a la ventana, para detectar el evento de cierre de la misma
+		ventana.addWindowListener( new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				cerrarAplicacion();
+			}
+		});
+		// Con ignoreRepaint le decimos al JFrame que no debe repintarse cuando el Sistema Operativo se lo indique,
+		// nosotros nos ocupamos totalmente del refresco de la pantalla
+		ventana.setIgnoreRepaint(true);
+		// El foco de Windows irá al Canvas, para que directamente podamos controlar este juego a través del teclado
+		this.requestFocus();
 	}
 	
 	/**
@@ -68,6 +82,20 @@ public class Invaders extends Canvas {
 		}
 		return instance;
 	}
+	
+	/**
+	 * Al cerrar la aplicación preguntaremos al usuario si está seguro de que desea salir.
+	 */
+	private void cerrarAplicacion() {
+		String [] opciones ={"Aceptar","Cancelar"};
+		int eleccion = JOptionPane.showOptionDialog(ventana,"¿Desea cerrar la aplicación?","Salir de la aplicación",
+		JOptionPane.YES_NO_OPTION,
+		JOptionPane.QUESTION_MESSAGE, null, opciones, "Aceptar");
+		if (eleccion == JOptionPane.YES_OPTION) {
+			System.exit(0);
+		}
+	}
+
 	
 	/**
 	 * Método principal del juego
